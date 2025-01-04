@@ -36,7 +36,8 @@ for ext in opt.exts.split(","):
 
 # Define ouput packaged workspace
 print( " --> Packaging output workspaces")
-packagedWS = ROOT.RooWorkspace("wsig_13TeV","wsig_13TeV")
+#packagedWS = ROOT.RooWorkspace("wsig_13TeV","wsig_13TeV")
+packagedWS = ROOT.RooWorkspace("wsig_13p6TeV","wsig_13p6TeV")#for run3
 packagedWS.imp = getattr(packagedWS,"import")
 
 # Extract merged datasets
@@ -52,14 +53,17 @@ for mp in opt.massPoints.split(","):
   print('fNames[0]')
   print(mp)
   print(opt.cat)
-  print(ROOT.TFile(fNames[opt.exts.split(",")[0]][0]).Get("wsig_13TeV").data("sig_mass_m%s_%s"%(mp,opt.cat)))
-  data_merged["m%s"%mp] = ROOT.TFile(fNames[opt.exts.split(",")[0]][0]).Get("wsig_13TeV").data("sig_mass_m%s_%s"%(mp,opt.cat)).emptyClone("sig_mass_m%s_%s"%(mp,opt.cat))
+  #print(ROOT.TFile(fNames[opt.exts.split(",")[0]][0]).Get("wsig_13TeV").data("sig_mass_m%s_%s"%(mp,opt.cat)))
+  print(ROOT.TFile(fNames[opt.exts.split(",")[0]][0]).Get("wsig_13p6TeV").data("sig_mass_m%s_%s"%(mp,opt.cat)))#for run3
+  #data_merged["m%s"%mp] = ROOT.TFile(fNames[opt.exts.split(",")[0]][0]).Get("wsig_13TeV").data("sig_mass_m%s_%s"%(mp,opt.cat)).emptyClone("sig_mass_m%s_%s"%(mp,opt.cat))
+  data_merged["m%s"%mp] = ROOT.TFile(fNames[opt.exts.split(",")[0]][0]).Get("wsig_13p6TeV").data("sig_mass_m%s_%s"%(mp,opt.cat)).emptyClone("sig_mass_m%s_%s"%(mp,opt.cat))#for run3
   data_merged_names.append( data_merged["m%s"%mp].GetName() )
 
 for ext, fNames_by_ext in fNames.items():
   for fName in fNames_by_ext:
     for mp in opt.massPoints.split(","):
-      d = ROOT.TFile(fName).Get("wsig_13TeV").data("sig_mass_m%s_%s"%(mp,opt.cat))
+      #d = ROOT.TFile(fName).Get("wsig_13TeV").data("sig_mass_m%s_%s"%(mp,opt.cat))
+      d = ROOT.TFile(fName).Get("wsig_13p6TeV").data("sig_mass_m%s_%s"%(mp,opt.cat))#for run3
       for i in range(d.numEntries()):
         p = d.get(i)
         w = d.weight()
@@ -71,7 +75,8 @@ for _data in data_merged.values(): packagedWS.imp(_data)
 for ext, fNames_by_ext in fNames.items():
   for fName in fNames_by_ext:
     fin = ROOT.TFile(fName)
-    wsin = fin.Get("wsig_13TeV")
+    #wsin = fin.Get("wsig_13TeV")
+    wsin = fin.Get("wsig_13p6TeV")#for run3
     if not wsin: continue
     allVars, allFunctions, allPdfs = {}, {}, {}
     for _var in rooiter(wsin.allVars()): allVars[_var.GetName()] = _var

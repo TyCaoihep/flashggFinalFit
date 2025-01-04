@@ -41,7 +41,8 @@ if opt.cats in ['all','wall']:
     cat = re.sub(".root","",f.split("/")[-1].split("_%s_"%opt.ext)[-1])
     inputFiles[cat] = f
     if citr == 0:
-      w = ROOT.TFile(f).Get("wsig_13TeV")
+      #w = ROOT.TFile(f).Get("wsig_13TeV")
+      w = ROOT.TFile(f).Get("wsig_13p6TeV")#for run3
       xvar = w.var(opt.xvar.split(":")[0])
       xvar.setPlotLabel(opt.xvar.split(":")[1])
       xvar.setUnit(opt.xvar.split(":")[2])
@@ -52,7 +53,8 @@ else:
     f = "%s/outdir_%s/CMS-HGG_sigfit_%s_%s.root"%(swd__,opt.ext,opt.ext,cat)
     inputFiles[cat] = f
     if citr == 0:
-      w = ROOT.TFile(f).Get("wsig_13TeV")
+      #w = ROOT.TFile(f).Get("wsig_13TeV")
+      w = ROOT.TFile(f).Get("wsig_13p6TeV")#for run3
       xvar = w.var(opt.xvar.split(":")[0])
       xvar.setPlotLabel(opt.xvar.split(":")[1])
       xvar.setUnit(opt.xvar.split(":")[2])
@@ -76,7 +78,8 @@ for cat,f in inputFiles.items():
 
   # Open signal workspace
   fin = ROOT.TFile(f)
-  w = fin.Get("wsig_13TeV")
+  #w = fin.Get("wsig_13TeV")
+  w = fin.Get("wsig_13p6TeV")#for run3
   w.var("MH").setVal(float(opt.MH))
 
   # Extract normalisations
@@ -102,6 +105,12 @@ for cat,f in inputFiles.items():
   for k, norm in norms.items():
     proc, year = k.split("__")
     w.var("IntLumi").setVal(lumiScaleFactor*lumiMap[year])
+    #check..
+    if norm is None:
+      raise ValueError("norm is not initialized or is None.")
+    print("norm:", norm)
+    print("type of norm:", type(norm))
+    #..check
     catNorm += norm.getVal()
 
   # Iterate over norms and extract data sets + pdfs

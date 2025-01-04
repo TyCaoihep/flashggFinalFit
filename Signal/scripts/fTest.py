@@ -109,6 +109,7 @@ for pidx, proc in enumerate(procsToFTest):
       ssf.buildNGaussians(nGauss)
       ssf.runFit()
       ssf.buildSplines()
+      print("ssf.Ndof=",ssf.Ndof)
       if ssf.Ndof >= 1: 
         ssfs[k] = ssf
         if ssfs[k].getReducedChi2() < min_reduced_chi2: 
